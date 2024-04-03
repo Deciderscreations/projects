@@ -1,0 +1,31 @@
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+product_name = []
+product_price = []
+description = []
+review = []
+for i in (2,4):
+    url = "https://www.flipkart.com/search?q=gate%20biotechnology&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off"+str(i)
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, "lxml")
+    soup = soup.find('div', class_="_1YokD2 _2GoDe3")
+
+    name = soup.find_all("a",class_="s1Q9rs")
+    for i in name:
+        name = i.text
+        product_name.append(name)
+
+    price = soup.find_all('div', class_="_30jeq3")
+    for i in price:
+        price= i.text
+        product_price.append(price)
+
+    desc=soup.find_all('div', class_="_3Djpdu")
+    for i in desc:
+        desc=i.text
+        description.append(desc)
+
+df = pd.DataFrame({"Product_name":product_name,"Product price":product_price,"product description":description})
+
+df.to_csv("C:/Users/kalaivani.H/Desktop/essential/gate book lists.csv")
